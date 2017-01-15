@@ -1,0 +1,59 @@
+﻿@using System.Data.Linq
+@using PagedList.Mvc;
+@model PagedList.IPagedList<LPD1.Models.Series>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Search", "Series"))
+{
+    <input type="text" id="txt" name="Title" />
+    <input type="submit" name="Search" title="Search" value="Search" />
+}
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { pageNumber = page }))
+
+@foreach (var serie in Model)
+{
+    <div class="item" style="border-bottom: solid 1px silver; overflow: hidden;">
+        <h2>
+            @serie.Title
+        </h2>
+        <span style="float:left">
+            <div>
+                <img src="@serie.ImageLink" alt="Sample Photo" />
+            </div>
+        </span>
+        <span>
+            <div>
+                <span class="Label">ImdbRank</span>
+                <span class="Value">@serie.ImdbRank</span>
+            </div>
+            <div>
+                <span class="Label">Genre</span>
+                <span class="Value">@serie.Genres</span>
+            </div>
+            <div>
+                <span class="Label">Director</span>
+                <span class="Value">@serie.Director</span>
+            </div>
+            <div>
+                <span class="Label">Description</span>
+                <span class="Value">@serie.ShortDescription</span>
+            </div>
+            <div>
+                @Html.ActionLink("More", "Details", "Series", new { id = serie._id }, null)
+            </div>
+        </span>
+    </div>
+}
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { pageNumber = page }))

@@ -1,11 +1,11 @@
-﻿@model LPD1.Models.UserModel
+﻿@model LPD1.Models.UserInfo
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>@Html.DisplayFor(model => model.Action)</h4>
+        <h4>@Html.DisplayFor(model => model.Action, null)</h4>
         <hr />
         @Html.DisplayFor(model => model.Error, null)
         <div class="form-group">

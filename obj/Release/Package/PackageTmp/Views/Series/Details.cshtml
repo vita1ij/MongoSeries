@@ -1,0 +1,225 @@
+﻿@model LPD1.Models.FullSeries
+
+<div class="item" style="border-bottom: solid 1px silver; overflow: hidden;">
+    <h2>
+        @Html.DisplayFor(model => model._Series.Title)
+    </h2>
+    @if (User.Identity.IsAuthenticated)
+    {
+        @Html.ActionLink("Grade It", "Series", "Ratings", new { id = @Model._Series._id }, null)
+    }
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (Model.IsFavourite)
+        {
+            @Html.ActionLink("Remove from favourites", "RemoveFF", "Series", new { id = @Model._Series._id }, null)
+        }
+        else
+        {
+            @Html.ActionLink("Add to favourites", "AddTF", "Series", new { id = @Model._Series._id }, null)
+        }
+    }
+
+    <table>
+        <tr>
+            <td>
+                <div>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model._Series.Title)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model._Series.Title)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model._Series.ImdbRank)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model._Series.ImdbRank)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model._Series.LocalRank)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model._Series.LocalRank)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model._Series.Desctiption)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model._Series.Desctiption)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model._Series.Genres)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model._Series.Genres)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model._Series.Director)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model._Series.Director)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model._Series.Writer)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model._Series.Writer)
+                        </dd>
+
+                        <dt>
+                            @Html.DisplayNameFor(model => model._Series.Actors)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model._Series.Actors)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.BasedOnBook)
+                        </dt>
+                        <dd>
+                            @if (Model._Series.BasedOnBook == null)
+                            {
+                                if (Model.showBooks)
+                                {
+                                    using (Html.BeginForm("SearchBook", "Series"))
+                                    {
+                                        <input type="text" id="txt" name="Title" />
+                                        <input type="text" id="id" name="Id" style="display:none" value="@Model._Series._id" />
+                                        <input type="submit" name="Search" title="Search" value="Search" />
+                                        <br/>
+                                    }
+                                    using (Html.BeginForm("AddBookToSeries", "Series", FormMethod.Post))
+                                    {
+                                        @Html.DropDownList("Books", null, htmlAttributes: new { size = 5, @class = "form-control" })
+                                        <br/>
+                                        <input type="text" id="id" name="Id" style="display:none" value="@Model._Series._id" />
+                                        <input type="submit" name="Select" title="Select" value="Select" />
+                                    }
+                                }
+                                else if (User.Identity.IsAuthenticated)
+                                {
+                                    @Html.ActionLink("Add book...", "ShowBooks", "Series", new { id = @Model._Series._id }, null)
+                                }
+                            }
+                            else
+                            {
+                                @Html.ActionLink(Model.BasedOnBook, "Details", "Books", new { id = @Model._Series.BasedOnBook.Value }, null)
+                            }
+                            
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model._Series.LastUpdated)
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model._Series.LastUpdated)
+                        </dd>
+
+                    </dl>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <img src="@Model._Series.ImageLink" alt="Sample Photo" />
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            @for (int season = 1; season < Model.Episodes.Max(x => x.Season); season++)
+            {
+                <td>
+                    <button onclick="show(document.getElementsByClassName('season @season'));" >@season</button> 
+                </td>
+            }
+        </tr>
+    </table>
+    <ul>
+        @foreach(var episode in Model.Episodes)
+        {
+            <li class="season @episode.Season">@Html.ActionLink(String.Format("E{0}: {1}",episode.Number, episode.Title),"Index","Episodes", new { id = episode._id.ToString() },null)</li>
+        }
+    </ul>
+
+    <h2>Ratings</h2>
+
+    @for (int i = 0; i < Model.Ratings.Count; i++)
+    {
+        if (User.Identity.IsAuthenticated)
+        {
+            if (Model.Ratings[i].UserId.ToString() == User.Identity.Name.Substring(0, 24))
+            {
+            @Html.ActionLink("[Edit]", "Index", "Ratings", new { id = Model.Ratings[i]._id }, null)
+            }
+        }
+        <div class="rating-@Model.Ratings[i].OverallValue">
+            
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(Model => Model.Ratings[i].Title)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(Model => Model.Ratings[i].Title)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(Model => Model.Ratings[i].Value)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(Model => Model.Ratings[i].Value)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(Model => Model.Ratings[i].Text)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(Model => Model.Ratings[i].Text)
+                </dd>
+
+            </dl>
+        </div>
+
+    }
+
+
+</div>
+<script type="text/javascript">
+    function hide(elements) {
+      elements = elements.length ? elements : [elements];
+      for (var index = 0; index < elements.length; index++) {
+        elements[index].style.display = 'none';
+      }
+    }
+
+    function show(elements) {
+        hide(document.getElementsByClassName('season'));
+
+        elements = elements.length ? elements : [elements];
+        for (var index = 0; index < elements.length; index++) {
+            elements[index].style.display = 'block';
+        }
+    }
+
+    window.onload = function (e) {
+        show(document.getElementsByClassName('season 1'))
+    }
+
+    
+</script>

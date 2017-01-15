@@ -1,0 +1,86 @@
+﻿@model LPD1.Models.FullEpisode
+
+<div>
+    <h4>Episode</h4>
+    <hr />
+    @if (User.Identity.IsAuthenticated)
+    {
+        @Html.ActionLink("Grade it", "Episode", "Ratings", new { id = Model._Episode._id.ToString() }, null)
+    }
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model._Episode.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model._Episode.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model._Episode.Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model._Episode.Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model._Episode.Season)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model._Episode.Season)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model._Episode.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model._Episode.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model._Episode.Rank)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model._Episode.Rank)
+        </dd>
+
+    </dl>
+
+    <h2>Ratings</h2>
+
+    @for(int i = 0; i < Model.Ratings.Count; i++)
+    {
+        <div class="rating-@Model.Ratings[i].OverallValue">
+
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(Model => Model.Ratings[i].Title)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(Model => Model.Ratings[i].Title)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(Model => Model.Ratings[i].Value)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(Model => Model.Ratings[i].Value)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(Model => Model.Ratings[i].Text)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(Model => Model.Ratings[i].Text)
+                </dd>
+
+            </dl>
+        </div>
+
+    }
+</div>
